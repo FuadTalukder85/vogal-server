@@ -35,6 +35,7 @@ async function run() {
 
     const db = client.db("dataSolution");
     const collection = db.collection("userCollection");
+    const product = db.collection("productCollection");
 
     // User Registration
     app.post("/api/v1/register", async (req, res) => {
@@ -92,6 +93,24 @@ async function run() {
         message: "Login successful",
         token,
       });
+    });
+    //get all supply item
+    app.get("/users", async (req, res) => {
+      const result = await collection.find().toArray();
+      res.send(result);
+    });
+
+    //post product
+    app.post("/create-product", async (req, res) => {
+      const addProduct = req.body;
+      const result = await product.insertOne(addProduct);
+      res.send(result);
+    });
+
+    //get all supply item
+    app.get("/products", async (req, res) => {
+      const result = await product.find().toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
