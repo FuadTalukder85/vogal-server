@@ -121,12 +121,13 @@ async function run() {
       res.send(result);
     });
 
-    //update an product item
+    // Update product by id
     app.put("/products/:id", async (req, res) => {
       const id = req.params.id;
+      const updateProduct = req.body;
+
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
-      const updateProduct = req.body;
       const productData = {
         $set: {
           title: updateProduct.title,
@@ -138,7 +139,26 @@ async function run() {
           description: updateProduct.description,
         },
       };
-      const result = await product.updateOne(filter, productData, options);
+      try {
+        const result = await product.updateOne(filter, productData, options);
+
+        // Check if the update was successful and respond accordingly
+        if (result.modifiedCount === 1 || result.upsertedCount === 1) {
+          res.status(200).json({ message: "product updated successfully" });
+        } else {
+          res.status(404).json({ error: "product not found" });
+        }
+      } catch (err) {
+        console.error("Error updating product:", err);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
+
+    // delete product by id
+    app.delete("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await product.deleteOne(query);
       res.send(result);
     });
 
