@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://data-solution-360-rosy.vercel.app",
     credentials: true,
   })
 );
@@ -171,18 +171,17 @@ async function run() {
     // Ensures that the client will close when you finish/error
     // await client.close();
   }
+  // Start the server
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+
+  // Test route
+  app.get("/", (req, res) => {
+    const serverStatus = {
+      message: "Server is running smoothly",
+    };
+    res.json(serverStatus);
+  });
 }
 run().catch(console.dir);
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-// Test route
-app.get("/", (req, res) => {
-  const serverStatus = {
-    message: "Server is running smoothly",
-  };
-  res.json(serverStatus);
-});
