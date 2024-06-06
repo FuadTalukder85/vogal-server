@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
@@ -16,7 +17,6 @@ app.use(
   })
 );
 
-const { MongoClient, ServerApiVersion, CURSOR_FLAGS } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.az94fyn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -94,7 +94,7 @@ async function run() {
         token,
       });
     });
-    //get all supply item
+    //get all users
     app.get("/users", async (req, res) => {
       const result = await collection.find().toArray();
       res.send(result);
@@ -107,9 +107,38 @@ async function run() {
       res.send(result);
     });
 
-    //get all supply item
+    //get all products
     app.get("/products", async (req, res) => {
       const result = await product.find().toArray();
+      res.send(result);
+    });
+
+    //get single product item by id
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await product.findOne(query);
+      res.send(result);
+    });
+
+    //update an product item
+    app.put("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateProduct = req.body;
+      const productData = {
+        $set: {
+          title: updateProduct.title,
+          tag: updateProduct.tag,
+          firstImg: updateProduct.firstImg,
+          secondImg: updateProduct.secondImg,
+          price: updateProduct.price,
+          discount: updateProduct.discount,
+          description: updateProduct.description,
+        },
+      };
+      const result = await product.updateOne(filter, productData, options);
       res.send(result);
     });
 
