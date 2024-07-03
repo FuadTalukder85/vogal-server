@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://data-solution-360-rosy.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
@@ -36,6 +36,7 @@ async function run() {
     const db = client.db("dataSolution");
     const collection = db.collection("userCollection");
     const product = db.collection("productCollection");
+    const carts = db.collection("carts");
 
     // User Registration
     app.post("/api/v1/register", async (req, res) => {
@@ -159,6 +160,19 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await product.deleteOne(query);
+      res.send(result);
+    });
+
+    // post carts item
+    app.post("/create-carts", async (req, res) => {
+      const addCarts = req.body;
+      const result = await product.insertOne(addCarts);
+      res.send(result);
+    });
+
+    // get carts
+    app.get("/carts", async (req, res) => {
+      const result = await carts.find().toArray();
       res.send(result);
     });
 
