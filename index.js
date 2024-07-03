@@ -166,13 +166,30 @@ async function run() {
     // post carts item
     app.post("/create-carts", async (req, res) => {
       const addCarts = req.body;
-      const result = await product.insertOne(addCarts);
+      const result = await carts.insertOne(addCarts);
       res.send(result);
     });
 
     // get carts
+    // app.get("/carts", async (req, res) => {
+    //   const result = await carts.find().toArray();
+    //   res.send(result);
+    // });
     app.get("/carts", async (req, res) => {
-      const result = await carts.find().toArray();
+      const email = req.query.email;
+      if (!email) {
+        res.send([]);
+      }
+
+      // const decodedEmail = req.decoded.email;
+      // if (email !== decodedEmail) {
+      //   return res
+      //     .status(403)
+      //     .send({ error: true, message: "Forbiddeen access" });
+      // }
+
+      const query = { email: email };
+      const result = await carts.find(query).toArray();
       res.send(result);
     });
 
