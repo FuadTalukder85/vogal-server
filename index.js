@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const stripe = require("stripe")(
+  "sk_test_51NFcc9HiKihjMle8rCLUT2Q6zMYMsJtx5ShlfHvPwYwfQrCPzH1sAFr0aSICfUuaPtb2jYqQLCLFKwKJNdDXM0zs00yjZd0NY4"
+);
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 require("dotenv").config();
@@ -191,6 +194,20 @@ async function run() {
       const query = { email: email };
       const result = await carts.find(query).toArray();
       res.send(result);
+    });
+
+    // payment
+    app.post("/create-payment-intent", async (req, res) => {
+      const { price } = req.body;
+      const amount = price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
     });
 
     // Send a ping to confirm a successful connection
