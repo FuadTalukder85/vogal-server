@@ -199,15 +199,32 @@ async function run() {
     // payment
     app.post("/create-payment-intent", async (req, res) => {
       const { price } = req.body;
-      const amount = price * 100;
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: "usd",
-        payment_method_types: ["card"],
-      });
-      res.send({
-        clientSecret: paymentIntent.client_secret,
-      });
+
+      if (!price || price < 0.5) {
+        return res.status(400).send({
+          error: "The price must be greater than or equal to 0.50 USD.",
+        });
+      }
+
+      const amount = Math.round(price * 100); // Ensure amount is an integer in cents
+      console.log(price, amount);
+
+      try {
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount,
+          currency: "usd",
+          payment_method_types: ["card"],
+        });
+
+        res.send({
+          clientSecret: paymentIntent.client_secret,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({
+          error: error.message,
+        });
+      }
     });
 
     // Send a ping to confirm a successful connection
