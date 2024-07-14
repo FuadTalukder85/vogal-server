@@ -40,6 +40,7 @@ async function run() {
     const collection = db.collection("userCollection");
     const product = db.collection("productCollection");
     const carts = db.collection("carts");
+    const paymentCollection = db.collection("payment");
 
     // User Registration
     app.post("/api/v1/register", async (req, res) => {
@@ -225,6 +226,21 @@ async function run() {
           error: error.message,
         });
       }
+    });
+
+    // payment api
+    app.post("/payments", async (req, res) => {
+      const payment = req.body;
+      const insertResult = await paymentCollection.insertOne(payment);
+      //
+      const query = {
+        _id: { $in: payment.cartsId.map((id) => new ObjectId(id)) },
+      };
+      const deleteResult = await carts.deleteMany(query);
+
+      console.log(payment);
+
+      res.send({ insertResult, deleteResult });
     });
 
     // Send a ping to confirm a successful connection
