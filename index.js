@@ -175,11 +175,12 @@ async function run() {
     });
 
     // get carts
-    // app.get("/carts", async (req, res) => {
-    //   const result = await carts.find().toArray();
-    //   res.send(result);
-    // });
     app.get("/carts", async (req, res) => {
+      const result = await carts.find().toArray();
+      res.send(result);
+    });
+    // get cart by loggedin user
+    app.get("/cart", async (req, res) => {
       const email = req.query.email;
       if (!email) {
         res.send([]);
@@ -241,6 +242,12 @@ async function run() {
       console.log(payment);
 
       res.send({ insertResult, deleteResult });
+    });
+
+    // Get total payment
+    app.get("/payments", async (req, res) => {
+      const result = await paymentCollection.find().toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
