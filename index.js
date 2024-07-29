@@ -185,16 +185,16 @@ async function run() {
       if (!email) {
         res.send([]);
       }
-
-      // const decodedEmail = req.decoded.email;
-      // if (email !== decodedEmail) {
-      //   return res
-      //     .status(403)
-      //     .send({ error: true, message: "Forbiddeen access" });
-      // }
-
       const query = { email: email };
       const result = await carts.find(query).toArray();
+      res.send(result);
+    });
+
+    // delete cart by id
+    app.delete("/cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await carts.deleteOne(query);
       res.send(result);
     });
 
