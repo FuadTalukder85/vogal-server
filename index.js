@@ -58,12 +58,27 @@ async function run() {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      const joinedDate = new Date();
+      const formattedDate =
+        joinedDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        }) +
+        " " +
+        joinedDate.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+
       // Insert user into the database
       await collection.insertOne({
         firstName,
         lastName,
         email,
         password: hashedPassword,
+        date: formattedDate,
       });
 
       res.status(201).json({
