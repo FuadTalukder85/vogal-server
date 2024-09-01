@@ -44,7 +44,7 @@ async function run() {
 
     // User Registration
     app.post("/api/v1/register", async (req, res) => {
-      const { firstName, lastName, email, password } = req.body;
+      const { firstName, lastName, email, password, role } = req.body;
 
       // Check if email already exists
       const existingUser = await collection.findOne({ email });
@@ -78,6 +78,7 @@ async function run() {
         lastName,
         email,
         password: hashedPassword,
+        role,
         date: formattedDate,
       });
 
@@ -85,6 +86,19 @@ async function run() {
         success: true,
         message: "User registered successfully",
       });
+    });
+
+    // User role
+    app.patch("/users/admin/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          role: "admin",
+        },
+      };
+      const result = await collection.updateOne(filter, updateDoc);
+      res.send(result);
     });
 
     // User Login
@@ -202,6 +216,25 @@ async function run() {
       }
       const query = { email: email };
       const result = await carts.find(query).toArray();
+      res.send(result);
+    });
+
+    // increment decrement quantity
+    app.put("/carts/:id", async (req, res) => {
+      const id = req.params.id;
+      const quantity = req.body.quantity;
+      const totalPrice = req.body.totalPrice;
+      const totalProfit = req.body.totalProfit;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity,
+          totalPrice,
+          totalProfit,
+        },
+      };
+      const result = await carts.updateOne(filter, updateDoc, options);
       res.send(result);
     });
 
