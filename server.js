@@ -1,0 +1,48 @@
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+
+const connectDB = require("./config/db");
+
+const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+
+const app = express();
+const port = process.env.PORT || 5000;
+
+app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+async function startServer() {
+  try {
+    await connectDB();
+    console.log("Database connected");
+
+    // Routes
+    app.use("/api/v1/users", userRoutes);
+    app.use("/api/v1/products", productRoutes);
+    app.use("/api/v1/carts", cartRoutes);
+    app.use("/api/v1/payments", paymentRoutes);
+
+    // Test route
+    app.get("/", (req, res) => {
+      res.json({ message: "Server is running smoothly" });
+    });
+
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
