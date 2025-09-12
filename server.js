@@ -8,6 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,6 +31,7 @@ async function startServer() {
     app.use("/api/v1/products", productRoutes);
     app.use("/api/v1/carts", cartRoutes);
     app.use("/api/v1/payments", paymentRoutes);
+    app.use("/api/v1/message", messageRoutes);
 
     // Test route
     app.get("/", (req, res) => {
