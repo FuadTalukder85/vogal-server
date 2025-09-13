@@ -4,15 +4,22 @@ const { getDB } = require("../config/db");
 exports.createMessage = async (req, res) => {
   const db = getDB();
   const message = db.collection("msgCollection");
-  const result = await message.insertOne(req, body);
+  const result = await message.insertOne(req.body);
   res.send(result);
 };
 
 exports.getMessage = async (req, res) => {
   const db = getDB();
   const message = db.collection("msgCollection");
+  const result = await message.find().toArray();
+  res.send(result);
+};
+
+exports.getMessageById = async (req, res) => {
+  const db = getDB();
+  const message = db.collection("msgCollection");
   const result = await message.findOne({ _id: new ObjectId(req.params.id) });
-  res.send({ message: "kire hala", result });
+  res.send(result);
 };
 
 exports.updateMessage = async (req, res) => {
