@@ -58,3 +58,9 @@ exports.getPayments = async (req, res) => {
   const result = await paymentCollection.find().toArray();
   res.send(result);
 };
+exports.getPaymentById = async (req, res) => {
+  const db = getDB();
+  const product = db.collection("payment");
+  const result = await product.findOne({ _id: new ObjectId(req.params.id) });
+  res.send(result);
+};
