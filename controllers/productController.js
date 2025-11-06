@@ -34,6 +34,7 @@ exports.updateProduct = async (req, res) => {
         tag: update.tag,
         firstImg: update.firstImg,
         secondImg: update.secondImg,
+        thirdImg: update.thirdImg,
         price: update.price,
         discount: update.discount,
         description: update.description,
