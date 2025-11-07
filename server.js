@@ -8,6 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const courierRoutes = require("./routes/courierRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 
@@ -32,6 +33,7 @@ async function startServer() {
     app.use("/api/v1/products", productRoutes);
     app.use("/api/v1/carts", cartRoutes);
     app.use("/api/v1/payments", paymentRoutes);
+    app.use("/api/v1/courier", courierRoutes);
     app.use("/api/v1/employee", employeeRoutes);
     app.use("/api/v1/message", messageRoutes);
 
