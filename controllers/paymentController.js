@@ -24,7 +24,7 @@ exports.addPayment = async (req, res) => {
   const payment = req.body;
 
   // === Generate 5 digit invoice ===
-  const invoiceNumber = Math.floor(10000 + Math.random() * 90000); // always 5 digit
+  const invoiceNumber = Math.floor(10000 + Math.random() * 90000);
   const now = new Date();
 
   // DD/MM/YYYY
@@ -63,4 +63,37 @@ exports.getPaymentById = async (req, res) => {
   const product = db.collection("payment");
   const result = await product.findOne({ _id: new ObjectId(req.params.id) });
   res.send(result);
+};
+
+// update payment
+exports.updatePayment = async (req, res) => {
+  try {
+    const db = getDB();
+    const paymentCollection = db.collection("payment");
+    const id = req.params.id;
+    const updateData = req.body;
+
+    const updateFields = ["processBy", "courier", "status", "note"];
+
+    const filteredData = Object.keys(updateData)
+      .filter((key) => updateFields.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = updateData[key];
+        return obj;
+      }, {});
+    if (filteredData.note) {
+      await paymentCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $push: { note: filteredData.note } }
+      );
+      return res.send({ success: true, message: "Note added" });
+    }
+    const result = await paymentCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: filteredData }
+    );
+    res.send({ success: true, updated: filteredData });
+  } catch (error) {
+    res.status(500).send({ error: "Failed to update payment" });
+  }
 };
