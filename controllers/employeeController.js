@@ -33,6 +33,7 @@ exports.updateEmployee = async (req, res) => {
         name: update.name,
         number: update.number,
         email: update.email,
+        designation: update.designation,
         address: update.address,
         emergency_contact: update.emergency_contact,
         salary: update.salary,

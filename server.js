@@ -10,6 +10,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const courierRoutes = require("./routes/courierRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 
 const app = express();
@@ -35,6 +36,7 @@ async function startServer() {
     app.use("/api/v1/payments", paymentRoutes);
     app.use("/api/v1/courier", courierRoutes);
     app.use("/api/v1/employee", employeeRoutes);
+    app.use("/api/v1/attendance", attendanceRoutes);
     app.use("/api/v1/message", messageRoutes);
 
     // Test route
