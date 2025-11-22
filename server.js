@@ -12,6 +12,7 @@ const courierRoutes = require("./routes/courierRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const generateSalaryRoutes = require("./routes/generateSalaryRoutes");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -36,7 +37,9 @@ async function startServer() {
     app.use("/api/v1/payments", paymentRoutes);
     app.use("/api/v1/courier", courierRoutes);
     app.use("/api/v1/employee", employeeRoutes);
+    app.use("/api/v1/employee", employeeRoutes);
     app.use("/api/v1/attendance", attendanceRoutes);
+    app.use("/api/v1/salary", generateSalaryRoutes);
     app.use("/api/v1/message", messageRoutes);
 
     // Test route

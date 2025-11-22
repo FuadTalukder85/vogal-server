@@ -4,7 +4,8 @@ exports.createAttendance = async (req, res) => {
   try {
     const db = getDB();
     const attendance = db.collection("attendanceCollection");
-    const { date, name, number, present, absent } = req.body;
+    const { id_no, date, name, number, present, absent, salary, designation } =
+      req.body;
 
     if (!date || !name || !number) {
       return res.status(400).send({ message: "Missing required fields" });
@@ -23,11 +24,15 @@ exports.createAttendance = async (req, res) => {
       return res.send({ message: "Attendance updated", result });
     } else {
       const result = await attendance.insertOne({
+        id_no,
         date,
         name,
         number,
+        salary,
+        designation,
         present: !!present,
         absent: !!absent,
+        status: "Pending",
       });
       return res.send({ message: "Attendance created", result });
     }

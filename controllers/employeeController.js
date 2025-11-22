@@ -30,6 +30,7 @@ exports.updateEmployee = async (req, res) => {
     { _id: new ObjectId(req.params.id) },
     {
       $set: {
+        id_no: update.id_no,
         name: update.name,
         number: update.number,
         email: update.email,
